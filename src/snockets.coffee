@@ -3,6 +3,7 @@
 DepGraph = require 'dep-graph'
 
 CoffeeScript = require 'coffee-script'
+less         = require 'less'
 fs           = require 'fs'
 path         = require 'path'
 uglify       = require 'uglify-js'
@@ -259,6 +260,13 @@ module.exports.compilers = compilers =
     match: /\.js$/
     compileSync: (sourcePath, source) ->
       CoffeeScript.compile source, {filename: sourcePath}
+  less:
+    match: /\.less$/
+    compileSync: (sourcePath, source) ->
+      less.render source, (e,css) ->
+        fs.writeFile sourcePath, css, (err) ->
+          if err
+            print(err)
 
 # ## Regexes
 
